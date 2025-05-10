@@ -43,6 +43,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation("com.exasol:parquet-io-java:2.0.13")
 
     // parquet
     implementation ("org.apache.parquet:parquet-avro:1.13.1")
