@@ -13,7 +13,6 @@ public class MonsteriniUser {
     private String userName;
     private String password;
     private int xp;
-    // TODO: HOME ADDRESS
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Questionnaire questionnaire;
