@@ -18,7 +18,14 @@ public class Geopoint {
     private Double lat;
     private Double lon;
 
-    private Integer indexLevel0;
+    public Geopoint() {
+    }
 
-
+    public Geopoint(Long id, String type, String tags, Double lat, Double lon) {
+        this.id = id;
+        this.type = type;
+        this.tags = tags;
+        this.lat = lat;
+        this.lon = lon;
+    }
 }

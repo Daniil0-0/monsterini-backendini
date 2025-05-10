@@ -1,7 +1,6 @@
 package be.kdg.hackathonsetup.repository;
 
 import be.kdg.hackathonsetup.domain.Geopoint;
-import com.azure.core.models.GeoPoint;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -11,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @Repository
-public interface GeoPointRepository extends CrudRepository<GeoPoint, Long> {
+public interface GeoPointRepository extends CrudRepository<Geopoint, Long> {
 
     @Query("""
     SELECT g
