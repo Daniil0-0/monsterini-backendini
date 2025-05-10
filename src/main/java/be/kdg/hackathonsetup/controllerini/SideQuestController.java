@@ -84,7 +84,6 @@ public class SideQuestController {
     private List<Geopoint> parseGeminiResponse(String response, List<Geopoint> available) {
         List<Geopoint> selected = new ArrayList<>();
 
-        // Use rounded BigDecimal strings as keys to avoid floating-point mismatch
         Map<String, Geopoint> coordMap = available.stream()
                 .collect(Collectors.toMap(
                         g -> formatCoords(g.getLat(), g.getLon()),
@@ -93,27 +92,23 @@ public class SideQuestController {
                 ));
 
         for (String line : response.split("\n")) {
-            if (line.contains("at (") && line.contains(")")) {
-                int start = line.indexOf('(');
-                int end = line.indexOf(')', start);
-                if (start != -1 && end != -1) {
-                    String coordsRaw = line.substring(start + 1, end);
-                    String[] parts = coordsRaw.split(",");
-                    if (parts.length == 2) {
-                        try {
-                            double lat = Double.parseDouble(parts[0].trim());
-                            double lon = Double.parseDouble(parts[1].trim());
-                            String key = formatCoords(lat, lon);
-                            System.out.println("Trying Gemini coord: " + key);
-                            if (coordMap.containsKey(key)) {
-                                selected.add(coordMap.get(key));
-                            } else {
-                                System.out.println("No match for: " + key);
-                            }
-                        } catch (NumberFormatException e) {
-                            System.out.println("Failed to parse coords: " + coordsRaw);
-                        }
+            // Match anything like: "51.123456, 4.123456"
+            String coordRegex = "(\\d+\\.\\d+),\\s*(\\d+\\.\\d+)";
+            var matcher = java.util.regex.Pattern.compile(coordRegex).matcher(line);
+
+            while (matcher.find()) {
+                try {
+                    double lat = Double.parseDouble(matcher.group(1));
+                    double lon = Double.parseDouble(matcher.group(2));
+                    String key = formatCoords(lat, lon);
+                    System.out.println("Trying Gemini coord: " + key);
+                    if (coordMap.containsKey(key)) {
+                        selected.add(coordMap.get(key));
+                    } else {
+                        System.out.println("No match for: " + key);
                     }
+                } catch (NumberFormatException e) {
+                    System.out.println("Failed to parse coord in line: " + line);
                 }
             }
         }
@@ -122,8 +117,7 @@ public class SideQuestController {
     }
 
     private String formatCoords(double lat, double lon) {
-        return new java.math.BigDecimal(lat).setScale(6, java.math.RoundingMode.HALF_UP).toPlainString()
-                + "," +
-                new java.math.BigDecimal(lon).setScale(6, java.math.RoundingMode.HALF_UP).toPlainString();
+        return String.format(Locale.US, "%.5f,%.5f", lat, lon);
     }
+
 }
