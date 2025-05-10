@@ -1,5 +1,6 @@
 package be.kdg.hackathonsetup.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,6 +21,7 @@ public class Questionnaire {
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonManagedReference
     private MonsteriniUser user;
 
     public String enhancePrompt(String userPrompt) {
