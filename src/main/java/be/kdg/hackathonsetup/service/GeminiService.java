@@ -41,27 +41,39 @@ public class GeminiService {
     public String generate(String prompt) {
         String url = String.format("/models/gemini-2.0-flash:generateContent?key=%s", apiKey);
 
-        String requestBody = """
+        // Use a safe escape mechanism
+        String json = """
+        {
+          "contents": [
             {
-              "contents": [
+              "parts": [
                 {
-                  "parts": [
-                    {
-                      "text": "%s"
-                    }
-                  ]
+                  "text": %s
                 }
               ]
             }
-            """.formatted(prompt);
+          ]
+        }
+        """.formatted(toJsonString(prompt));
 
         return webClient.post()
                 .uri(url)
                 .header("Content-Type", "application/json")
-                .bodyValue(requestBody)
+                .bodyValue(json)
                 .retrieve()
                 .bodyToMono(String.class)
                 .onErrorResume(e -> Mono.just("Error: " + e.getMessage()))
                 .block();
     }
+
+    // Escapes special characters for safe embedding in JSON
+    private String toJsonString(String raw) {
+        return "\"" + raw
+                .replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "")
+                + "\"";
+    }
+
 }
