@@ -29,15 +29,16 @@ public class ParquetReaderRunner implements CommandLineRunner {
         this.geoPointRepository = geoPointRepository;
     }
 
+    // ONLY RUN THIS ON STARTUP
     @Override
     public void run(String... args) throws Exception {
-        List<Geopoint> records = readGeopoints();
-        if (!records.isEmpty()) {
-            geoPointRepository.saveAll(records);
-            System.out.println("Imported " + records.size() + " Geopoints from Parquet.");
-        } else {
-            System.out.println("No Geopoints found to import.");
-        }
+//        List<Geopoint> records = readGeopoints();
+//        if (!records.isEmpty()) {
+//            geoPointRepository.saveAll(records);
+//            System.out.println("Imported " + records.size() + " Geopoints from Parquet.");
+//        } else {
+//            System.out.println("No Geopoints found to import.");
+//        }
     }
 
     private List<Geopoint> readGeopoints() throws Exception {
