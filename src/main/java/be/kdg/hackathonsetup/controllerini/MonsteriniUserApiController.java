@@ -121,5 +121,24 @@ public class MonsteriniUserApiController {
         return ResponseEntity.ok(leaderboard);
     }
 
+    @PostMapping("/award")
+    public ResponseEntity<MonsteriniUser> awardPointsToUser(@RequestBody Map<String, Long> payload) {
+        Long userId = payload.get("userId");
+        Long pointId = payload.get("pointId");
+
+        MonsteriniUser user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
+
+        Geopoint point = geopointRepository.findById(pointId)
+                .orElseThrow(() -> new EntityNotFoundException("Geopoint not found with ID: " + pointId));
+
+        int points = point.getPoints() != null ? point.getPoints() : 0;
+        user.setXp(user.getXp() + points);
+        MonsteriniUser updatedUser = userRepository.save(user);
+
+        return ResponseEntity.ok(updatedUser);
+    }
+
+
 
 }
