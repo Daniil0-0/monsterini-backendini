@@ -21,6 +21,7 @@ public class Questionnaire {
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private MonsteriniUser user;
+
     public String enhancePrompt(String userPrompt) {
         StringBuilder sb = new StringBuilder();
         sb.append("User prompt: ").append(userPrompt).append("\n");

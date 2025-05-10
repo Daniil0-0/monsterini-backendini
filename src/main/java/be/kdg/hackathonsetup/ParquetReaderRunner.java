@@ -23,6 +23,7 @@ import java.util.Map;
 @Component
 public class ParquetReaderRunner implements CommandLineRunner {
     private final GeoPointRepository geoPointRepository;
+    private static final int TAGS_MAX_LENGTH = 255;
 
     public ParquetReaderRunner(GeoPointRepository geoPointRepository) {
         this.geoPointRepository = geoPointRepository;
@@ -68,6 +69,10 @@ public class ParquetReaderRunner implements CommandLineRunner {
                 if (tagsStr.equals("{}") || tagsStr.isEmpty()) {
                     continue;
                 }
+                if (tagsStr.length() > TAGS_MAX_LENGTH) {
+                    tagsStr = tagsStr.substring(0, TAGS_MAX_LENGTH);
+                }
+
 
                 Geopoint geopoint = new Geopoint();
                 geopoint.setId(Long.parseLong(idObj.toString()));
