@@ -37,3 +37,6 @@ out/
 .vscode/
 
 .env
+
+src/main/java/be/kdg/.DS_Store
+src/main/java/be/kdg/hackathonsetup/.DS_Store
