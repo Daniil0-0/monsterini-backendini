@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -30,7 +31,7 @@ public class MonsteriniUserApiController {
     public ResponseEntity<MonsteriniUser> getUser(@PathVariable Long id) {
         Optional<MonsteriniUser> user = userRepository.findById(id);
         return user.map(ResponseEntity::ok)
-                   .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -62,6 +63,7 @@ public class MonsteriniUserApiController {
         userRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
     @PostMapping("/register")
     public ResponseEntity<MonsteriniUser> register(@RequestBody RegisterUserDto dto) {
         MonsteriniUser user = new MonsteriniUser();
@@ -90,9 +92,12 @@ public class MonsteriniUserApiController {
         String prompt = geminiService.buildPrompt(instruction, matches, questionnaire);
         return geminiService.generate(prompt);
     }
+
     @PostMapping("/login")
-    public ResponseEntity<MonsteriniUser> login(@RequestParam String email,
-                                                @RequestParam String password) {
+    public ResponseEntity<MonsteriniUser> login(@RequestBody Map<String, String> loginData) {
+        String email = loginData.get("email");
+        String password = loginData.get("password");
+
         Optional<MonsteriniUser> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty()) {
             return ResponseEntity.status(401).build(); // Unauthorized
@@ -102,8 +107,6 @@ public class MonsteriniUserApiController {
         if (!user.getPassword().equals(password)) {
             return ResponseEntity.status(401).build(); // Unauthorized
         }
-
         return ResponseEntity.ok(user);
     }
-
 }
