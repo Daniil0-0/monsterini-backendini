@@ -63,10 +63,8 @@ public class MonsteriniUserApiController {
         userRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
     @PostMapping("/register")
     public ResponseEntity<MonsteriniUser> register(@RequestBody RegisterUserDto dto) {
-
         MonsteriniUser user = new MonsteriniUser();
         user.setId(null);
         user.setEmail(dto.email());
@@ -109,6 +107,19 @@ public class MonsteriniUserApiController {
         if (!user.getPassword().equals(password)) {
             return ResponseEntity.status(401).build(); // Unauthorized
         }
+
         return ResponseEntity.ok(user);
     }
+
+    @GetMapping("/leaderboard")
+    public ResponseEntity<List<LeaderboardUserDto>> getLeaderboard() {
+        List<MonsteriniUser> topUsers = userRepository.findTopUsers(PageRequest.of(0, 10));
+        List<LeaderboardUserDto> leaderboard = topUsers.stream()
+                .map(u -> new LeaderboardUserDto(u.getUserName(), u.getXp()))
+                .toList();
+
+        return ResponseEntity.ok(leaderboard);
+    }
+
+
 }
