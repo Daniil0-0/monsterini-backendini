@@ -9,3 +9,15 @@ Content-Type: application/json
   "usualPlaces": "Bliri liriri.",
   "user": { "id": 1 }
 }
+
+###
+
+POST /api/sidequest/generate HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "preference": "I want a restaurant ",
+  "count": 1
+}

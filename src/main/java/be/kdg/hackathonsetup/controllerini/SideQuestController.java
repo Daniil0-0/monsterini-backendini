@@ -1,5 +1,6 @@
 package be.kdg.hackathonsetup.controllerini;
 
+import be.kdg.hackathonsetup.controllerini.dto.GenerateSideQuestDto;
 import be.kdg.hackathonsetup.domain.Geopoint;
 import be.kdg.hackathonsetup.domain.MonsteriniUser;
 import be.kdg.hackathonsetup.domain.Questionnaire;
@@ -25,23 +26,21 @@ public class SideQuestController {
     private final QuestionnaireRepository questionnaireRepository;
     private final MonsteriniUserRepository userRepository;
 
-    @GetMapping("/generate")
+    @PostMapping("/generate")
     public ResponseEntity<List<Geopoint>> generateSideQuestJson(
-            @RequestParam Long userId,
-            @RequestParam String preference,
-            @RequestParam int count) {
+            @RequestBody GenerateSideQuestDto dto) {
 
         System.out.println("Received sidequest request:");
-        System.out.println("- User ID: " + userId);
-        System.out.println("- Preference: " + preference);
-        System.out.println("- Count: " + count);
+        System.out.println("- User ID: " + dto.userId());
+        System.out.println("- Preference: " + dto.preference());
+        System.out.println("- Count: " + dto.count());
 
-        if (count < 1 || count > 5) {
-            System.out.println("Invalid count: " + count);
+        if (dto.count() < 1 || dto.count() > 5) {
+            System.out.println("Invalid count: " + dto.count());
             return ResponseEntity.badRequest().build();
         }
 
-        Optional<MonsteriniUser> userOpt = userRepository.findById(userId);
+        Optional<MonsteriniUser> userOpt = userRepository.findById(dto.userId());
         if (userOpt.isEmpty() || userOpt.get().getQuestionnaire() == null) {
             System.out.println("User not found or missing questionnaire.");
             return ResponseEntity.badRequest().build();
@@ -59,7 +58,7 @@ public class SideQuestController {
 
         System.out.println("Matching places found: " + places.size());
 
-        String prompt = geminiService.buildPrompt(preference, places, questionnaire);
+        String prompt = geminiService.buildPrompt(dto.preference(), places, questionnaire);
         System.out.println("Generated prompt for Gemini:\n" + prompt);
 
         String response = geminiService.generate(prompt);
@@ -72,8 +71,8 @@ public class SideQuestController {
             selected = parseGeminiResponse(response, places);
             System.out.println("Returning " + selected.size() + " selected places from Gemini.");
         } catch (Exception e) {
-            System.out.println("Failed to parse Gemini response, returning fallback top " + count + " places.");
-            selected = places.subList(0, Math.min(count, places.size()));
+            System.out.println("Failed to parse Gemini response, returning fallback top " + dto.count() + " places.");
+            selected = places.subList(0, Math.min(dto.count(), places.size()));
         }
 
 
