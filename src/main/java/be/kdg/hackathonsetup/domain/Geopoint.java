@@ -18,6 +18,8 @@ public class Geopoint {
     private Double lat;
     private Double lon;
 
+    private Integer points;
+
     public Geopoint() {
     }
 

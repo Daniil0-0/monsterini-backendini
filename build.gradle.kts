@@ -35,7 +35,6 @@ dependencies {
     implementation("com.azure.spring:spring-cloud-azure-starter")
     implementation("com.azure.spring:spring-cloud-azure-starter-jdbc-postgresql")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
     testImplementation("io.projectreactor:reactor-test")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")

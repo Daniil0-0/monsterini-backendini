@@ -1,6 +1,5 @@
 package be.kdg.hackathonsetup.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,6 +15,5 @@ public class MonsteriniUser {
     private int xp;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonBackReference
     private Questionnaire questionnaire;
 }
