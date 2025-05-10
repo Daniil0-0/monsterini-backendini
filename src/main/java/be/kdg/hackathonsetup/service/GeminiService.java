@@ -32,8 +32,12 @@ public class GeminiService {
                     .append(" at (").append(g.getLat()).append(", ").append(g.getLon()).append(")")
                     .append(" with tags: ").append(g.getTags()).append("\n");
         }
+        prompt.append("""
+                Pick a few that suit the user preferences for a side quest.
+                If there are no perfect matches, choose the most interesting or diverse options from the list.
+                Always return at least one place.
+                """);
 
-        prompt.append("Pick a few that suit the user preferences for a side quest.");
         return prompt.toString();
     }
 
@@ -43,18 +47,18 @@ public class GeminiService {
 
         // Use a safe escape mechanism
         String json = """
-        {
-          "contents": [
-            {
-              "parts": [
                 {
-                  "text": %s
+                  "contents": [
+                    {
+                      "parts": [
+                        {
+                          "text": %s
+                        }
+                      ]
+                    }
+                  ]
                 }
-              ]
-            }
-          ]
-        }
-        """.formatted(toJsonString(prompt));
+                """.formatted(toJsonString(prompt));
 
         return webClient.post()
                 .uri(url)
