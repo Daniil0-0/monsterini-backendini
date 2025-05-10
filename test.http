@@ -1,0 +1,11 @@
+###
+POST http://localhost:8080/api/questionnaire
+Content-Type: application/json
+
+{
+  "placeTypes": ["Cafés & Coffee Shops", "Parks & Green Spaces"],
+  "ageRange": "20-25",
+  "occupation": "Student",
+  "usualPlaces": "Bliri liriri.",
+  "user": { "id": 1 }
+}
