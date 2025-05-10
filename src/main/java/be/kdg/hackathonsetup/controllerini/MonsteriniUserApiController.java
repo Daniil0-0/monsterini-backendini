@@ -66,7 +66,9 @@ public class MonsteriniUserApiController {
 
     @PostMapping("/register")
     public ResponseEntity<MonsteriniUser> register(@RequestBody RegisterUserDto dto) {
+
         MonsteriniUser user = new MonsteriniUser();
+        user.setId(null);
         user.setEmail(dto.email());
         user.setUserName(dto.userName());
         user.setPassword(dto.password());
