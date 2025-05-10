@@ -1,9 +1,6 @@
 package be.kdg.hackathonsetup.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -11,11 +8,13 @@ import lombok.Data;
 public class MonsteriniUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String email;
     private String userName;
     private String password;
     private int xp;
     // TODO: HOME ADDRESS
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Questionnaire questionnaire;
 }
